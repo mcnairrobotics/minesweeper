@@ -1,0 +1,35 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "",
+	"cxx-modules" : {},
+	"database-info" : null,
+	"dir-cur-bld" : "C:/Users/Derek/Documents/c++Projects/minesweeper/build-win",
+	"dir-cur-src" : "C:/Users/Derek/Documents/c++Projects/minesweeper",
+	"dir-top-bld" : "C:/Users/Derek/Documents/c++Projects/minesweeper/build-win",
+	"dir-top-src" : "C:/Users/Derek/Documents/c++Projects/minesweeper",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : 
+	[
+		"C:\\msys64\\ucrt64\\include\\c++\\14.2.0",
+		"C:\\msys64\\ucrt64\\include\\c++\\14.2.0\\x86_64-w64-mingw32",
+		"C:\\msys64\\ucrt64\\include\\c++\\14.2.0\\backward",
+		"C:\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\14.2.0\\include",
+		"C:\\msys64\\ucrt64\\include",
+		"C:\\msys64\\ucrt64\\lib\\gcc\\x86_64-w64-mingw32\\14.2.0\\include-fixed"
+	],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "C:/Users/Derek/Documents/c++Projects/minesweeper/build-win/CMakeFiles/minesweeper-wsl.dir",
+	"sources" : 
+	{
+		"CMakeFiles/minesweeper-wsl.dir/main.cpp.obj" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/Users/Derek/Documents/c++Projects/minesweeper/main.cpp"
+		}
+	}
+}

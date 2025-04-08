@@ -1,0 +1,30 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "",
+	"cxx-modules" : {},
+	"database-info" : null,
+	"dir-cur-bld" : "C:/Users/Derek/Documents/c++Projects/minesweeper/build",
+	"dir-cur-src" : "C:/Users/Derek/Documents/c++Projects/minesweeper",
+	"dir-top-bld" : "C:/Users/Derek/Documents/c++Projects/minesweeper/build",
+	"dir-top-src" : "C:/Users/Derek/Documents/c++Projects/minesweeper",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : 
+	[
+		"C:\\SFML-2.5.1\\include"
+	],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "C:/Users/Derek/Documents/c++Projects/minesweeper/build/CMakeFiles/minesweeper.dir",
+	"sources" : 
+	{
+		"CMakeFiles/minesweeper.dir/main.cpp.obj" : 
+		{
+			"language" : "CXX",
+			"source" : "C:/Users/Derek/Documents/c++Projects/minesweeper/main.cpp"
+		}
+	}
+}

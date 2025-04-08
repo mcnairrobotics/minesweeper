@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/Users/Derek/Documents/c++Projects/minesweeper/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/minesweeper.dir/includes_CXX.rsp -g -std=gnu++20 -o CMakeFiles\\minesweeper.dir\\main.cpp.obj -c C:\\Users\\Derek\\Documents\\c++Projects\\minesweeper\\main.cpp",
+  "file": "C:/Users/Derek/Documents/c++Projects/minesweeper/main.cpp",
+  "output": "CMakeFiles/minesweeper.dir/main.cpp.obj"
+}
+]

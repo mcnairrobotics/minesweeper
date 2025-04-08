@@ -1,0 +1,15 @@
+# ninja log v6
+765	4689	7657510185699738	CMakeFiles/minesweeper.dir/main.cpp.obj	205b19da9b27e444
+704	763	7657510185131437	CMakeFiles/minesweeper.dir/main.cpp.obj.modmap	7befe0c2a40d0cee
+19	214	7657511188254871	build.ninja	9cef83a30d6cf1c8
+704	763	7657510185131437	C:/Users/Derek/Documents/c++Projects/minesweeper/build/CMakeFiles/minesweeper.dir/CXXModules.json	7befe0c2a40d0cee
+4689	4886	7657510224881875	minesweeper.exe	be3f99f15aa22873
+704	763	7657510185131437	CMakeFiles/minesweeper.dir/CXX.dd	7befe0c2a40d0cee
+32	703	7657510178282919	CMakeFiles/minesweeper.dir/main.cpp.obj.ddi	675e07bc3c795a55
+1227	1363	7652191286964971	C:/Users/Derek/Documents/c++Projects/minesweeper/bin/minesweeper.exe	728f6a1e7a07318a
+44	667	7657511202916926	CMakeFiles/minesweeper.dir/main.cpp.obj.ddi	675e07bc3c795a55
+668	723	7657511209231309	CMakeFiles/minesweeper.dir/CXX.dd	7befe0c2a40d0cee
+668	723	7657511209231309	C:/Users/Derek/Documents/c++Projects/minesweeper/build/CMakeFiles/minesweeper.dir/CXXModules.json	7befe0c2a40d0cee
+668	723	7657511209231309	CMakeFiles/minesweeper.dir/main.cpp.obj.modmap	7befe0c2a40d0cee
+724	3937	7657511209713513	CMakeFiles/minesweeper.dir/main.cpp.obj	205b19da9b27e444
+3938	4125	7657511241792104	minesweeper.exe	be3f99f15aa22873
