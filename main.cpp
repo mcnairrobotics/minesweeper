@@ -45,12 +45,8 @@ public:
         }
     }
 };
-int static lastUpdatedTime = 0;
-int static pausedTime = 0;
-int static gameCondition;
-std::string static name;
 
-void drawGame(double width, double height, sf::RenderWindow* window, int rows, int columns, int mines);
+void drawGame(double width, double height, sf::RenderWindow* window, int rows, int columns, int mines, std::string name);
 void setText(sf::Text &text, float x, float y){
     sf::FloatRect textRect = text.getLocalBounds();
     text.setOrigin(textRect.left + textRect.width/2.0f,
@@ -107,7 +103,7 @@ void drawTitle(double width, double height, sf::RenderWindow* window, std::strin
     window->draw(userText);
     window->display();
 }
-bool drawLeaderboard(int asterixSpot, std::chrono::_V2::steady_clock::time_point start) {
+bool drawLeaderboard(int asterixSpot, std::chrono::_V2::steady_clock::time_point start, int lastUpdatedTime, int pausedTime) {
     double width = 1000;
     double height = 800;
     sf::Font font;
@@ -189,7 +185,7 @@ bool drawLeaderboard(int asterixSpot, std::chrono::_V2::steady_clock::time_point
     
     }
 }
-void editLeaderboard(int time){
+void editLeaderboard(int time, int lastUpdatedTime, std::string name, int pausedTime){
     std::ifstream inFile("leaderboard.txt"); // Open the file for reading
     if (!inFile) {
         std::cerr << "Error opening file for reading." << std::endl;
@@ -227,7 +223,7 @@ void editLeaderboard(int time){
 
     outFile.close();
     auto CurrentTime = std::chrono::steady_clock::now();
-    drawLeaderboard(whereMyNameAt, CurrentTime);
+    drawLeaderboard(whereMyNameAt, CurrentTime, lastUpdatedTime, pausedTime);
 }
 std::vector<sf::Sprite> drawUI(double width, double height, sf::RenderWindow* window, int faceType, int flags, int elapsedSeconds, int paused){
     sf::Texture faceTexture[6];
@@ -372,7 +368,7 @@ void boundChecker(std::vector<std::vector<tile>>* grid, int i, int j, sf::Render
    
     }
 }
-void redrawGrid(double width, double height, sf::RenderWindow* window, std::vector<std::vector<tile>>* grid, bool showMines, int mines, bool paused, int flags, std::chrono::_V2::steady_clock::time_point startTime, bool debug){
+void redrawGrid(double width, double height, sf::RenderWindow* window, std::vector<std::vector<tile>>* grid, bool showMines, int mines, bool paused, int flags, std::chrono::_V2::steady_clock::time_point startTime, bool debug, int lastUpdatedTime, int gameCondition, std::string name, int pausedTime){
     window->clear(sf::Color::White);
     int tilesDisplayed = 0;
     int totalTiles = (grid->size()*grid->at(0).size())-mines;//l*w-mines
@@ -387,7 +383,7 @@ void redrawGrid(double width, double height, sf::RenderWindow* window, std::vect
                 {
                     if(grid->at(i)[j].hasMine && showMines == false){
                         //lose game
-                        redrawGrid(width, height, window, grid, true, mines, false, flags, startTime, debug);
+                        redrawGrid(width, height, window, grid, true, mines, false, flags, startTime, debug, lastUpdatedTime, gameCondition, name, pausedTime);
                         return;
                     }else if(grid->at(i)[j].nearMine == 0 && grid->at(i)[j].numberDisplayed == true){
                         //fill out empty tiles
@@ -448,7 +444,7 @@ void redrawGrid(double width, double height, sf::RenderWindow* window, std::vect
         gameCondition = 2;
         drawUI(width, height, window, face, flags, lastUpdatedTime-pausedTime, paused);
         window->display();
-        editLeaderboard(lastUpdatedTime-pausedTime);
+        editLeaderboard(lastUpdatedTime-pausedTime, lastUpdatedTime, name, pausedTime);
     }else{
         
         drawUI(width, height, window, face, flags, elapsed_seconds.count()-pausedTime, paused);
@@ -469,10 +465,10 @@ void redrawGrid(double width, double height, sf::RenderWindow* window, std::vect
 
     
 }
-void drawGame(double width, double height, sf::RenderWindow* window, int rows, int columns, int mines){
+void drawGame(double width, double height, sf::RenderWindow* window, int rows, int columns, int mines, std::string name){
     window->clear(sf::Color::White);
-    gameCondition = 0;
-    pausedTime = 0;
+    int gameCondition = 0;
+    int pausedTime = 0;
     sf::Texture gridTexture[2];
     gridTexture[0].loadFromFile("images/tile_hidden.png");
     gridTexture[1].loadFromFile("images/tile_revealed.png");
@@ -481,6 +477,7 @@ void drawGame(double width, double height, sf::RenderWindow* window, int rows, i
     std::uniform_int_distribution<> distrib(0, rows);
     std::uniform_int_distribution<> distrib2(0, columns);
     int ogMineCount = mines;
+    int lastUpdatedTime = 0;
     std::vector<std::pair<int, int>> randomSpots;
     for (int i = 0; i < mines; ++i) {
         bool freeSpot = false;
@@ -508,30 +505,30 @@ void drawGame(double width, double height, sf::RenderWindow* window, int rows, i
     //std::cout << "texture " << std::endl;
     //draw grid, set which ones are mines
     std::vector<std::vector<tile>> grid;
+    sf::Sprite gridSprite;
+    gridSprite.setTexture(gridTexture[0]);
     for(int i = 0; i < rows; i++)
     {   
         std::vector<tile> tempRow;
         for(int j = 0; j < columns; j++)
         {
-            sf::Sprite gridSprite;
-            gridSprite.setTexture(gridTexture[0]);
             gridSprite.setPosition(j*32,i*32);
             window->draw(gridSprite);
             bool hasMine = false;
-            if(mines > 0)
-            {
-                for(int k = 0; k < randomSpots.size(); k++){
-                    if(randomSpots[k].first == i && randomSpots[k].second == j)
-                    {
-                        hasMine = true;
-                        mines --;
-                    }
-                }
-            }
             tempRow.push_back(tile(&gridSprite, hasMine));
             //window->display();
         }
         grid.push_back(tempRow);
+    }
+    if(mines > 0)
+    {
+        for(int k = 0; k < randomSpots.size(); k++){
+            if(randomSpots[k].first < rows && randomSpots[k].second < columns)
+            {
+                grid[randomSpots[k].first][randomSpots[k].second].hasMine = true;
+                mines --;
+            } 
+        }
     }
     int flags = ogMineCount;
     //assign number values to tiles
@@ -595,7 +592,7 @@ void drawGame(double width, double height, sf::RenderWindow* window, int rows, i
             SecondsPast -= pausedTime;
             if (lastUpdatedTime != SecondsPast){
                 lastUpdatedTime = SecondsPast;
-                redrawGrid(width, height, window, &grid, debug, ogMineCount-mines, false, flags, start, debug);
+                redrawGrid(width, height, window, &grid, debug, ogMineCount-mines, false, flags, start, debug, lastUpdatedTime, gameCondition, name, pausedTime);
             } 
         }else{
             //game paused
@@ -610,11 +607,11 @@ void drawGame(double width, double height, sf::RenderWindow* window, int rows, i
             if(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left){
                 //reset button
                 if (localbounds1.contains(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y)) {
-                    drawGame(width, height, window, readConfigFile(1), readConfigFile(0), readConfigFile(2));
+                    drawGame(width, height, window, readConfigFile(1), readConfigFile(0), readConfigFile(2), name);
                 }
                 if (localbounds2.contains(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y)) {
                     bool ogPaused = paused;
-                    leaderboard != drawLeaderboard(10, start);
+                    leaderboard != drawLeaderboard(10, start, lastUpdatedTime, pausedTime);
                     paused = ogPaused + leaderboard;
                     //open up new window and do shit
                 }
@@ -661,12 +658,12 @@ void drawGame(double width, double height, sf::RenderWindow* window, int rows, i
                 
                 if(debug == false && paused == false && leaderboard == false)
                 {
-                    redrawGrid(width, height, window, &grid, false, ogMineCount-mines, false, flags, start, debug);
+                    redrawGrid(width, height, window, &grid, false, ogMineCount-mines, false, flags, start, debug, lastUpdatedTime, gameCondition, name, pausedTime);
                 }else if(debug == true){
-                    redrawGrid(width, height, window, &grid, true, ogMineCount-mines, paused, flags, start, debug);
+                    redrawGrid(width, height, window, &grid, true, ogMineCount-mines, paused, flags, start, debug, lastUpdatedTime, gameCondition, name, pausedTime);
                 }
                 else if(paused == true || leaderboard){
-                    redrawGrid(width, height, window, &grid, false, ogMineCount-mines, true, flags, start, debug);
+                    redrawGrid(width, height, window, &grid, false, ogMineCount-mines, true, flags, start, debug, lastUpdatedTime, gameCondition, name, pausedTime);
                 }
                 
             }
@@ -677,14 +674,14 @@ void drawGame(double width, double height, sf::RenderWindow* window, int rows, i
                     //grid checkers
                     int xstartPoint = 0;
                     int ystartPoint = 0;
-                    if(grid[rows/2][columns/2].graphic.getPosition().y+height/4-16 <= sf::Mouse::getPosition().y)
+                    /*if(grid[rows/2][columns/2].graphic.getPosition().y+height/4-16 <= sf::Mouse::getPosition().y)
                     {
                         ystartPoint = rows/2;
                     }
                     if(grid[rows/2][columns/2].graphic.getPosition().x+width/2.5+64 <= sf::Mouse::getPosition().x)
                     {
                         xstartPoint = columns/2;
-                    }
+                    }*/
                     for(int i = ystartPoint; i < rows; i++)
                     {   
                         for(int j = xstartPoint; j < columns; j++)
@@ -703,7 +700,7 @@ void drawGame(double width, double height, sf::RenderWindow* window, int rows, i
                             
                         }
                     }
-                    redrawGrid(width, height, window, &grid, false, ogMineCount-mines, false, flags, start, debug);
+                    redrawGrid(width, height, window, &grid, false, ogMineCount-mines, false, flags, start, debug, lastUpdatedTime, gameCondition, name, pausedTime);
                     
                 }
                 
@@ -736,12 +733,12 @@ int main() {
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
                 if(inputString.size() > 0)//start game
                 {
-                    name = inputString;
+                    std::string name = inputString;
                     window.close();
                     double width = 32*readConfigFile(0);
                     double height = 32* readConfigFile(1) +288;
                     sf::RenderWindow gameWindow(sf::VideoMode(width, height), "Minesweeper", sf::Style::Close);
-                    drawGame(width, height, &gameWindow, readConfigFile(1), readConfigFile(0), readConfigFile(2));
+                    drawGame(width, height, &gameWindow, readConfigFile(1), readConfigFile(0), readConfigFile(2), name);
                 }
                 window.display();
             }
